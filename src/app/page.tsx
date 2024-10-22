@@ -78,7 +78,6 @@ export default function Home() {
           "Content-Type": "application/json",
         },
       });
-      console.log(response.data);
       setUserDetails(response.data);
       const mergedPRs = await fetchMergedPrCount(
         response.data.login,

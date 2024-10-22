@@ -114,7 +114,6 @@ export const getGitStreak = async (username: string, accessToken: string) => {
         },
       }
     );
-    console.log(res.data);
 
     const contributionWeeks =
       res.data.data.user.contributionsCollection.contributionCalendar.weeks;
@@ -203,7 +202,6 @@ export const fetchMostUsedLanguages = async (
     const sortedLanguages = Object.entries(languageUsage).sort(
       ([, a], [, b]) => b.size - a.size
     );
-    console.log(sortedLanguages);
     return sortedLanguages;
   } catch (err) {
     console.error("Error fetching most used languages : ", err);
@@ -246,9 +244,6 @@ export const fetchGitHubContributions = async (
       }
     );
 
-    console.log(
-      response.data.data.user.contributionsCollection.contributionCalendar
-    );
     return response.data.data.user.contributionsCollection.contributionCalendar;
   } catch (err) {
     console.error("Error fetching contribution data:", err);

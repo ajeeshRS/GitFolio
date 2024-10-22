@@ -166,7 +166,7 @@ export default function ProfileCard({
               ))}
             </div>
           </div>
-          {userData.twitter_username !== "" && (
+          {userData.twitter_username !== null && (
             <div className="w-full flex flex-col justify-start mt-3">
               <p className="font-semibold py-2">Else where</p>
               <p className="flex items-center p-1 text-xs border w-fit rounded-lg">
