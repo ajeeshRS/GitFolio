@@ -12,6 +12,8 @@ import { toPng } from "html-to-image";
 import download from "downloadjs";
 import { Cover } from "@/components/ui/cover";
 import { motion } from "framer-motion";
+import { xContent } from "@/lib/contants";
+import { FaXTwitter } from "react-icons/fa6";
 
 export const container = {
   hidden: { opacity: 0 },
@@ -47,6 +49,11 @@ export default function Home() {
     }
   };
 
+  const handleShare = () => {
+    const xURL = `https://x.com/intent/tweet?text=${xContent}`;
+    window.open(xURL, '_blank'); 
+  };
+
   const fetchGitHubUserDetails = async (accessToken: string) => {
     setLoading(true);
     setTimeout(async () => {
@@ -64,7 +71,7 @@ export default function Home() {
       );
       setMergedPrCount(mergedPRs);
       setLoading(false);
-    }, 2000);
+    }, 1500);
   };
 
   return (
@@ -143,8 +150,8 @@ export default function Home() {
           >
             Download
           </button>
-          <button className="px-4 py-2 rounded-md border border-black bg-white text-black text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">
-            Share
+          <button onClick={handleShare} className="px-4 py-2 rounded-md border border-black bg-white text-black text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200 flex items-center">
+           <FaXTwitter className="w-4 h-4 mx-1"/> Share
           </button>
         </div>
       )}

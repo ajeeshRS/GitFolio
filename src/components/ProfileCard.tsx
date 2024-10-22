@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import CardSkelton from "./CardSkelton";
 import { karla } from "@/app/fonts/font";
 import { motion } from "framer-motion";
-import { container, item } from "@/app/page";
+import { item } from "@/app/page";
 
 export default function ProfileCard({ userData, mergedPrCount, cardRef }: any) {
   const [gitAge, setGitAge] = useState<number>(0);

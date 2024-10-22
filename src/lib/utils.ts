@@ -222,3 +222,4 @@ export const fetchGitHubContributions = async (
     console.error("Error fetching contribution data:", error);
   }
 };
+

@@ -30,3 +30,9 @@ export const privacyPolicies = [
       "We may update this Privacy Policy from time to time. Any changes will be posted on this page, and we encourage you to review it periodically to stay informed about how we protect your information.",
   },
 ];
+
+export const xContent = encodeURIComponent(
+  `🚀 I just generated my GitHub profile card using Gitfolio 🔥🔥!
+   \n\n[Insert your card png]
+   \n\n#GitHub #ProfileCardGenerator #Gitfolio`
+);
