@@ -59,7 +59,7 @@ export default function ProfileCard({
     };
 
     getRemainingDetails();
-  }, [session,userData]);
+  }, [session, userData]);
 
   return (
     <>
@@ -78,11 +78,15 @@ export default function ProfileCard({
                 height={96}
                 className="w-24 h-24 rounded-full"
                 src={userData.avatar_url}
+                layout="responsive"
                 alt="GitHub Avatar"
-                crossOrigin="anonymous"
+                priority
+                placeholder="blur"
               />
               <div className="ml-4">
-                <h2 className="text-xl font-semibold">{userData.name ? userData.name : userData.login}</h2>
+                <h2 className="text-xl font-semibold">
+                  {userData.name ? userData.name : userData.login}
+                </h2>
                 <p className="text-gray-500">@{userData.login}</p>
                 <div className="flex items-center">
                   <MapPin className="w-4 h-4 text-gray-600 mr-1" />
@@ -123,28 +127,28 @@ export default function ProfileCard({
           </div>
 
           <div className="mt-4 md:flex md:flex-wrap grid grid-cols-2 gap-5 items-center md:justify-between">
-            <div className="text-gray-700 md:w-fit w-full p-5 rounded-lg bg-white flex flex-col items-center justify-center shadow-md">
+            <div className="text-gray-700 md:w-fit w-full p-5 rounded-lg bg-white flex flex-col items-center justify-center shadow-sm">
               <span className="flex items-center">
                 <BookCopy className="w-4 h-4 mr-1 text-blue-600" />
                 {userData.public_repos}
               </span>
               <span className="font-semibold">Public Repos</span>
             </div>
-            <div className="text-gray-700 md:w-fit w-full p-5 rounded-lg bg-white flex flex-col items-center justify-center shadow-md">
+            <div className="text-gray-700 md:w-fit w-full p-5 rounded-lg bg-white flex flex-col items-center justify-center shadow-sm">
               <span className="flex items-center">
                 <Flame className="w-4 h-4 mr-1 text-orange-600" />
                 {gitStreak} days
               </span>
               <span className="font-semibold">Git Streak</span>
             </div>
-            <div className="text-gray-700 md:w-fit w-full p-5 rounded-lg bg-white flex flex-col items-center justify-center shadow-md">
+            <div className="text-gray-700 md:w-fit w-full p-5 rounded-lg bg-white flex flex-col items-center justify-center shadow-sm">
               <span className="flex items-center">
                 <Cake className="w-4 h-4 mr-1 text-green-600" />
                 {gitAge} years
               </span>
               <span className="font-semibold">Git Era</span>
             </div>
-            <div className="text-gray-700 md:w-fit w-full p-5 rounded-lg bg-white flex flex-col items-center justify-center shadow-md">
+            <div className="text-gray-700 md:w-fit w-full p-5 rounded-lg bg-white flex flex-col items-center justify-center shadow-sm">
               <span className="flex items-center">
                 <GitMerge className="w-4 h-4 mr-1 text-purple-600" />
                 {mergedPrCount}

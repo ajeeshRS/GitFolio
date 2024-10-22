@@ -7,6 +7,7 @@ import SessionWrapper from "@/components/SessionWrapper";
 export const metadata: Metadata = {
   title: "GitFolio.",
   description: "Generate your gitfolio card.",
+  
 };
 
 export default function RootLayout({
