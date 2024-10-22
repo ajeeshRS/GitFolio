@@ -1,9 +1,5 @@
-import { DefaultSession, NextAuthOptions } from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
-
-type User = {
-  accessToken?: string;
-};
 
 export const authOptions: NextAuthOptions = {
   providers: [

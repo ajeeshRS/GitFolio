@@ -6,9 +6,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-
-
-
 const GITHUB_GRAPHQL_API = "https://api.github.com/graphql";
 
 export const fetchMergedPrCount = async (
@@ -178,5 +175,50 @@ export const fetchMostUsedLanguages = async (
     return sortedLanguages;
   } catch (err) {
     console.error("Error fetching most used languages : ", err);
+  }
+};
+
+export const fetchGitHubContributions = async (
+  username: string,
+  accessToken: string
+) => {
+  try {
+    const query = `
+        query ($username: String!) {
+          user(login: $username) {
+            contributionsCollection {
+              contributionCalendar {
+                totalContributions
+                weeks {
+                  contributionDays {
+                    date
+                    contributionCount
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+
+    const response = await axios.post(
+      GITHUB_GRAPHQL_API,
+      {
+        query,
+        variables: { username },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    console.log(
+      response.data.data.user.contributionsCollection.contributionCalendar
+    );
+    return response.data.data.user.contributionsCollection.contributionCalendar;
+  } catch (error) {
+    console.error("Error fetching contribution data:", error);
   }
 };

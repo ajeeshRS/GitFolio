@@ -1,57 +1,12 @@
-import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
+import { fetchGitHubContributions } from "@/lib/utils";
 
 export default function ContributionGraph({ username }: any) {
   const { data: session } = useSession();
   const [contributions, setContributions] = useState<any>(null);
-
-  const fetchGitHubContributions = async (
-    username: string,
-    accessToken: string
-  ) => {
-    try {
-      const query = `
-          query ($username: String!) {
-            user(login: $username) {
-              contributionsCollection {
-                contributionCalendar {
-                  totalContributions
-                  weeks {
-                    contributionDays {
-                      date
-                      contributionCount
-                    }
-                  }
-                }
-              }
-            }
-          }
-        `;
-
-      const response = await axios.post(
-        `https://api.github.com/graphql`,
-        {
-          query,
-          variables: { username },
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      console.log(
-        response.data.data.user.contributionsCollection.contributionCalendar
-      );
-      return response.data.data.user.contributionsCollection
-        .contributionCalendar;
-    } catch (error) {
-      console.error("Error fetching contribution data:", error);
-    }
-  };
+  const [loading, setLoading] = useState(false);
 
   const getColorForContribution = (count: number) => {
     if (count === 0) return "bg-slate-200";
@@ -61,17 +16,6 @@ export default function ContributionGraph({ username }: any) {
     return "bg-green-700";
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchGitHubContributions(
-        username,
-        session?.user.accessToken as string
-      );
-      setContributions(data);
-    };
-
-    fetchData();
-  }, []);
   const getMonthLabel = (date: string) => {
     return format(new Date(date), "MMM");
   };
@@ -83,8 +27,36 @@ export default function ContributionGraph({ username }: any) {
     const previousMonth = previousWeek ? getWeekStartMonth(previousWeek) : null;
     return !previousWeek || currentMonth !== previousMonth;
   };
-  if (!contributions) {
-    return <p>Loading...</p>;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchGitHubContributions(
+          username,
+          session?.user.accessToken as string
+        );
+        setContributions(data);
+        setLoading(false);
+      } catch (err: any) {
+        setLoading(false);
+        console.log(err.message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (!contributions || loading) {
+    return (
+      <div className="animate-pulse flex space-x-4">
+        <div className="space-y-2 flex justify-between w-full">
+          <div className="w-full mt-8 flex flex-col items-start">
+            <div className="h-28 bg-gray-300 rounded w-full my-2"></div>
+          </div>
+        </div>
+      </div>
+    );
   }
   return (
     <div className="w-full flex flex-col items-start">
@@ -109,7 +81,7 @@ export default function ContributionGraph({ username }: any) {
                 title={`${day.date}: ${day.contributionCount} contributions`}
                 className={`${getColorForContribution(
                   day.contributionCount
-                )} inline-block rounded-sm m-[1px] w-3 h-3 `}
+                )} inline-block rounded-sm m-[1px] md:w-3 md:h-3 w-[4px] h-[4px]`}
               />
             ))}
           </div>
