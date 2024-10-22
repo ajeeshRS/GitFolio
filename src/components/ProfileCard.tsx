@@ -78,7 +78,6 @@ export default function ProfileCard({
                 height={96}
                 className="w-24 h-24 rounded-full"
                 src={userData.avatar_url}
-                layout="responsive"
                 alt="GitHub Avatar"
                 priority
                 placeholder="blur"
