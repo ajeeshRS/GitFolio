@@ -36,3 +36,19 @@ export const xContent = encodeURIComponent(
    \n\n[Insert your card png]
    \n\n#GitHub #ProfileCardGenerator #Gitfolio`
 );
+
+export const container = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.3,
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+export const item = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};

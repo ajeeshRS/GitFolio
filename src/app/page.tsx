@@ -12,31 +12,46 @@ import { toPng } from "html-to-image";
 import download from "downloadjs";
 import { Cover } from "@/components/ui/cover";
 import { motion } from "framer-motion";
-import { xContent } from "@/lib/contants";
+import { container, item, xContent } from "@/lib/contants";
 import { FaXTwitter } from "react-icons/fa6";
 
-export const container = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      delayChildren: 0.3,
-      staggerChildren: 0.2,
-    },
-  },
-};
-
-export const item = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
+export interface GitHubUser {
+  login: string;
+  id: number;
+  avatar_url: string;
+  url: string;
+  html_url: string;
+  followers_url: string;
+  following_url: string;
+  gists_url: string;
+  starred_url: string;
+  subscriptions_url: string;
+  organizations_url: string;
+  repos_url: string;
+  events_url: string;
+  received_events_url: string;
+  type: string;
+  name: string | null;
+  company: string | null;
+  blog: string | null;
+  location: string | null;
+  email: string | null;
+  bio: string | null;
+  twitter_username: string | null;
+  public_repos: number;
+  public_gists: number;
+  followers: number;
+  following: number;
+  created_at: string;
+  updated_at: string;
+}
 
 export default function Home() {
   const { data: session } = useSession();
-  const [userDetails, setUserDetails] = useState<any>(null);
+  const [userDetails, setUserDetails] = useState<GitHubUser | null>(null);
   const [mergedPrCount, setMergedPrCount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const cardRef = useRef<any>(null);
+  const cardRef = useRef(null);
 
   const downloadImage = async () => {
     if (cardRef.current === null) return;
@@ -44,14 +59,14 @@ export default function Home() {
     try {
       const image = await toPng(cardRef.current);
       download(image, "github-profile-card.png");
-    } catch (error) {
-      console.error("Failed to download the image", error);
+    } catch (err) {
+      console.error("Failed to download the image", err);
     }
   };
 
   const handleShare = () => {
     const xURL = `https://x.com/intent/tweet?text=${xContent}`;
-    window.open(xURL, '_blank'); 
+    window.open(xURL, "_blank");
   };
 
   const fetchGitHubUserDetails = async (accessToken: string) => {
@@ -150,8 +165,11 @@ export default function Home() {
           >
             Download
           </button>
-          <button onClick={handleShare} className="px-4 py-2 rounded-md border border-black bg-white text-black text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200 flex items-center">
-           <FaXTwitter className="w-4 h-4 mx-1"/> Share
+          <button
+            onClick={handleShare}
+            className="px-4 py-2 rounded-md border border-black bg-white text-black text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200 flex items-center"
+          >
+            <FaXTwitter className="w-4 h-4 mx-1" /> Share
           </button>
         </div>
       )}

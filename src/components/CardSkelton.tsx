@@ -1,5 +1,5 @@
 "use client"
-import { item } from "@/app/page";
+import { item } from "@/lib/contants";
 import {motion} from "framer-motion"
 
 export default function CardSkelton() {

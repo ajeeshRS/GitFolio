@@ -3,9 +3,28 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { fetchGitHubContributions } from "@/lib/utils";
 
-export default function ContributionGraph({ username }: any) {
+interface Props {
+  username: string;
+}
+
+interface ContributionDay {
+  date: string;
+  contributionCount: number;
+}
+
+interface ContributionWeek {
+  contributionDays: ContributionDay[];
+}
+
+interface ContributionCalendar {
+  totalContributions: number;
+  weeks: ContributionWeek[];
+}
+
+export default function ContributionGraph({ username }: Props) {
   const { data: session } = useSession();
-  const [contributions, setContributions] = useState<any>(null);
+  const [contributions, setContributions] =
+    useState<ContributionCalendar | null>(null);
   const [loading, setLoading] = useState(false);
 
   const getColorForContribution = (count: number) => {
@@ -19,10 +38,13 @@ export default function ContributionGraph({ username }: any) {
   const getMonthLabel = (date: string) => {
     return format(new Date(date), "MMM");
   };
-  const getWeekStartMonth = (week: any) => {
+  const getWeekStartMonth = (week: ContributionWeek) => {
     return getMonthLabel(week.contributionDays[0].date);
   };
-  const shouldShowMonthLabel = (currentWeek: any, previousWeek: any) => {
+  const shouldShowMonthLabel = (
+    currentWeek: ContributionWeek,
+    previousWeek: ContributionWeek | null
+  ) => {
     const currentMonth = getWeekStartMonth(currentWeek);
     const previousMonth = previousWeek ? getWeekStartMonth(previousWeek) : null;
     return !previousWeek || currentMonth !== previousMonth;
@@ -38,14 +60,14 @@ export default function ContributionGraph({ username }: any) {
         );
         setContributions(data);
         setLoading(false);
-      } catch (err: any) {
+      } catch (err) {
         setLoading(false);
-        console.log(err.message);
+        console.log(err);
       }
     };
 
     fetchData();
-  }, []);
+  }, [username, session]);
 
   if (!contributions || loading) {
     return (
@@ -61,7 +83,7 @@ export default function ContributionGraph({ username }: any) {
   return (
     <div className="w-full flex flex-col items-start">
       <div className="flex w-full justify-between flex-nowrap">
-        {contributions.weeks.map((week: any, weekIndex: number) => (
+        {contributions.weeks.map((week: ContributionWeek, weekIndex: number) => (
           <div key={weekIndex} className="week flex">
             {shouldShowMonthLabel(week, contributions.weeks[weekIndex - 1]) && (
               <p className="text-center text-[10px] font-medium mb-1">
@@ -73,9 +95,9 @@ export default function ContributionGraph({ username }: any) {
       </div>
 
       <div className="contribution-graph flex w-full justify-start flex-nowrap">
-        {contributions.weeks.map((week: any, weekIndex: number) => (
+        {contributions.weeks.map((week: ContributionWeek, weekIndex: number) => (
           <div key={weekIndex} className="week flex flex-col">
-            {week.contributionDays.map((day: any, dayIndex: number) => (
+            {week.contributionDays.map((day: ContributionDay, dayIndex: number) => (
               <div
                 key={dayIndex}
                 title={`${day.date}: ${day.contributionCount} contributions`}

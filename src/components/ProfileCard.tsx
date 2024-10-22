@@ -1,6 +1,6 @@
 "use client";
 import { BookCopy, Cake, Flame, GitMerge, MapPin } from "lucide-react";
-import { useEffect, useState } from "react";
+import { RefObject, useEffect, useState } from "react";
 import ContributionGraph from "./ContributionGraph";
 import { fetchMostUsedLanguages, getGitAge, getGitStreak } from "@/lib/utils";
 import { useSession } from "next-auth/react";
@@ -10,12 +10,26 @@ import { toast } from "sonner";
 import CardSkelton from "./CardSkelton";
 import { karla } from "@/app/fonts/font";
 import { motion } from "framer-motion";
-import { item } from "@/app/page";
+import { item } from "@/lib/contants";
+import Image from "next/image";
+import { GitHubUser } from "@/app/page";
 
-export default function ProfileCard({ userData, mergedPrCount, cardRef }: any) {
+interface ProfileCardProps {
+  userData: GitHubUser;
+  mergedPrCount: number;
+  cardRef: RefObject<HTMLDivElement>;
+}
+
+export default function ProfileCard({
+  userData,
+  mergedPrCount,
+  cardRef,
+}: ProfileCardProps) {
   const [gitAge, setGitAge] = useState<number>(0);
   const [gitStreak, setGitStreak] = useState<number | undefined>(0);
-  const [topLanguages, setTopLanguages] = useState<any[] | undefined>([]);
+  const [topLanguages, setTopLanguages] = useState<
+    [string, { size: number; color: string }][] | undefined
+  >([]);
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
 
@@ -36,6 +50,8 @@ export default function ProfileCard({ userData, mergedPrCount, cardRef }: any) {
 
         setTopLanguages(languages);
       } catch (err) {
+        const error = err as Error;
+        console.log("error in getting remaining details :", error.message);
         toast.error("Error Generating Card");
       } finally {
         setLoading(false);
@@ -43,7 +59,7 @@ export default function ProfileCard({ userData, mergedPrCount, cardRef }: any) {
     };
 
     getRemainingDetails();
-  }, []);
+  }, [session,userData]);
 
   return (
     <>
@@ -57,7 +73,9 @@ export default function ProfileCard({ userData, mergedPrCount, cardRef }: any) {
         >
           <div className="flex md:flex-row flex-col items-center justify-between">
             <div className="flex justify-between items-center md:w-1/2 w-full md:justify-start">
-              <img
+              <Image
+                width={96}
+                height={96}
                 className="w-24 h-24 rounded-full"
                 src={userData.avatar_url}
                 alt="GitHub Avatar"
@@ -159,10 +177,7 @@ export default function ProfileCard({ userData, mergedPrCount, cardRef }: any) {
           )}
           <div className="w-full flex flex-col items-start mt-4">
             <p className="font-semibold py-2">Contribution Graph</p>
-            <ContributionGraph
-              username={userData.login}
-              setLoading={setLoading}
-            />
+            <ContributionGraph username={userData.login} />
           </div>
         </motion.div>
       )}

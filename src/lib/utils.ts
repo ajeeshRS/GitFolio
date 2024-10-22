@@ -6,6 +6,38 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+interface LanguageNode {
+  name: string;
+  color: string;
+}
+
+interface LanguageEdge {
+  size: number;
+  node: LanguageNode;
+}
+
+interface RepositoryNode {
+  name: string;
+  primaryLanguage: LanguageNode | null; 
+  languages: {
+    edges: LanguageEdge[];
+  };
+}
+
+interface UserRepositories {
+  nodes: RepositoryNode[];
+}
+
+interface User {
+  repositories: UserRepositories;
+}
+
+interface GraphQLResponse {
+  data: {
+    user: User;
+  };
+}
+
 const GITHUB_GRAPHQL_API = "https://api.github.com/graphql";
 
 export const fetchMergedPrCount = async (
@@ -39,7 +71,7 @@ export const fetchMergedPrCount = async (
   }
 };
 
-export const getGitAge = (created: Date) => {
+export const getGitAge = (created: string) => {
   const createdAt = new Date(created);
   const currentDate = new Date();
 
@@ -59,18 +91,18 @@ export const getGitAge = (created: Date) => {
 export const getGitStreak = async (username: string, accessToken: string) => {
   const query = `{
     user(login:"${username}") {
-   contributionsCollection{
-   contributionCalendar{
-   weeks{
-   contributionDays{
-   date,
-   contributionCount
-   }
-   }
-   }
-   }
-    }
-  }`;
+             contributionsCollection{
+                   contributionCalendar{
+                         weeks{
+                            contributionDays{
+                                  date,
+                                  contributionCount
+                               }
+                          }
+                     }
+                }
+            }
+      }`;
   try {
     const res = await axios.post(
       GITHUB_GRAPHQL_API,
@@ -113,7 +145,7 @@ export const getGitStreak = async (username: string, accessToken: string) => {
 export const fetchMostUsedLanguages = async (
   username: string,
   accessToken: string
-) => {
+) =>  {
   try {
     console.log(username, accessToken);
     const query = `{
@@ -139,7 +171,7 @@ export const fetchMostUsedLanguages = async (
             }
         }`;
 
-    const res = await axios.post(
+    const res = await axios.post<GraphQLResponse>(
       GITHUB_GRAPHQL_API,
       { query },
       {
@@ -154,8 +186,8 @@ export const fetchMostUsedLanguages = async (
 
     const languageUsage: Record<string, { size: number; color: string }> = {};
 
-    repositories.forEach((repo: any) => {
-      repo.languages.edges.forEach((lang: any) => {
+    repositories.forEach((repo) => {
+      repo.languages.edges.forEach((lang) => {
         const languageName = lang.node.name;
         const languageSize = lang.size;
         const languageColor = lang.node.color;
@@ -218,8 +250,7 @@ export const fetchGitHubContributions = async (
       response.data.data.user.contributionsCollection.contributionCalendar
     );
     return response.data.data.user.contributionsCollection.contributionCalendar;
-  } catch (error) {
-    console.error("Error fetching contribution data:", error);
+  } catch (err) {
+    console.error("Error fetching contribution data:", err);
   }
 };
-
