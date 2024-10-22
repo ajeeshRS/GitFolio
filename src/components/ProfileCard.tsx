@@ -82,7 +82,7 @@ export default function ProfileCard({
                 crossOrigin="anonymous"
               />
               <div className="ml-4">
-                <h2 className="text-xl font-semibold">{userData.name}</h2>
+                <h2 className="text-xl font-semibold">{userData.name ? userData.name : userData.login}</h2>
                 <p className="text-gray-500">@{userData.login}</p>
                 <div className="flex items-center">
                   <MapPin className="w-4 h-4 text-gray-600 mr-1" />
