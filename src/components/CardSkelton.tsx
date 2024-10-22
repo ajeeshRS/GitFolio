@@ -4,7 +4,7 @@ import {motion} from "framer-motion"
 
 export default function CardSkelton() {
   return (
-    <motion.div variants={item} className="relative w-[840px] h-[620px] rounded-xl bg-neutral-100 p-10">
+    <motion.div variants={item} className="relative md:w-[840px] w-[360px] rounded-xl bg-neutral-100 p-10">
       <div className="animate-pulse flex space-x-4">
         <div className="rounded-full bg-gray-300 h-24 w-24"></div>
         <div className="flex-1 space-y-4 py-1">
@@ -17,7 +17,7 @@ export default function CardSkelton() {
       </div>
       <div className="animate-pulse flex space-x-4">
         <div className="space-y-2 flex justify-between w-full">
-          <div className="w-full mt-8 flex justify-between items-center">
+          <div className="w-full mt-8 md:flex md:flex-wrap grid grid-cols-2 gap-5 md:justify-between items-center">
             <div className="h-24 w-28 bg-gray-300 rounded"></div>
             <div className="h-24 w-28 bg-gray-300 rounded"></div>
             <div className="h-24 w-28 bg-gray-300 rounded"></div>
