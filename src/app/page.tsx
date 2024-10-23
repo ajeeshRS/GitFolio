@@ -14,6 +14,7 @@ import { Cover } from "@/components/ui/cover";
 import { motion } from "framer-motion";
 import { container, item, xContent } from "@/lib/contants";
 import { FaXTwitter } from "react-icons/fa6";
+import { toast } from "sonner";
 
 export interface GitHubUser {
   login: string;
@@ -52,23 +53,6 @@ export default function Home() {
   const [mergedPrCount, setMergedPrCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-
-  // const downloadImage = async () => {
-  //   if (cardRef.current === null) return;
-
-  //   try {
-  //     await document.fonts.ready;
-
-  //     const image = await toPng(cardRef.current, {
-  //       cacheBust: true,
-  //       pixelRatio: window.devicePixelRatio || 1,
-  //     });
-
-  //     download(image, "github-profile-card.png");
-  //   } catch (err) {
-  //     console.error("Failed to download the image", err);
-  //   }
-  // };
 
   const downloadImage = async () => {
     if (cardRef.current === null) return;
@@ -149,7 +133,7 @@ export default function Home() {
           onClick={() =>
             fetchGitHubUserDetails(session?.user.accessToken as string)
           }
-          className={`${karla.className} bg-black rounded-lg hover:shadow-2xl w-fit px-2 text-white px-4 py-2 flex items-center mt-6`}
+          className={`${karla.className} bg-black rounded-lg hover:shadow-2xl w-fit text-white px-4 py-2 flex items-center mt-6`}
         >
           {loading ? "Generating..." : "Generate"}
 
@@ -185,7 +169,17 @@ export default function Home() {
         <div className="flex items-center py-8">
           <button
             onClick={downloadImage}
-            className="px-4 py-2 mx-3 md:cursor-default cursor-not-allowed rounded-md border border-black bg-white text-black text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200"
+            className="px-4 py-2 mx-3 md:block hidden md:cursor-default cursor-not-allowed rounded-md border border-black bg-white text-black text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200"
+          >
+            Download
+          </button>
+          <button
+            onClick={() =>
+              toast.error(
+                "Download is currently unavailable on mobile devices. Please use a desktop for the best experience."
+              )
+            }
+            className="px-4 py-2 mx-3 md:hidden block md:cursor-default cursor-not-allowed rounded-md border border-black bg-white text-black text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200"
           >
             Download
           </button>
