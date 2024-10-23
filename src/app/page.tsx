@@ -8,7 +8,7 @@ import axios from "axios";
 import Image from "next/image";
 import github from "../public/github.svg";
 import { fetchMergedPrCount } from "@/lib/utils";
-import { toPng } from "html-to-image";
+import * as htmlToImage from "html-to-image";
 import download from "downloadjs";
 import { Cover } from "@/components/ui/cover";
 import { motion } from "framer-motion";
@@ -53,18 +53,37 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
+  // const downloadImage = async () => {
+  //   if (cardRef.current === null) return;
+
+  //   try {
+  //     await document.fonts.ready;
+
+  //     const image = await toPng(cardRef.current, {
+  //       cacheBust: true,
+  //       pixelRatio: window.devicePixelRatio || 1,
+  //     });
+
+  //     download(image, "github-profile-card.png");
+  //   } catch (err) {
+  //     console.error("Failed to download the image", err);
+  //   }
+  // };
+
   const downloadImage = async () => {
     if (cardRef.current === null) return;
-  
+
     try {
       await document.fonts.ready;
-  
-      const image = await toPng(cardRef.current, {
-        cacheBust: true,
-        pixelRatio: window.devicePixelRatio || 1, 
-      });
-  
-      download(image, "github-profile-card.png");
+
+      htmlToImage
+        .toPng(cardRef.current, {
+          cacheBust: true,
+          pixelRatio: window.devicePixelRatio || 1,
+        })
+        .then((dataUrl) => {
+          download(dataUrl, "gitfolio-card.png");
+        });
     } catch (err) {
       console.error("Failed to download the image", err);
     }

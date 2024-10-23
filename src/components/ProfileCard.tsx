@@ -86,10 +86,12 @@ export default function ProfileCard({
                   {userData.name ? userData.name : userData.login}
                 </h2>
                 <p className="text-gray-500">@{userData.login}</p>
-                <div className="flex items-center">
-                  <MapPin className="w-4 h-4 text-gray-600 mr-1" />
-                  <p className="text-gray-600">{userData.location}</p>
-                </div>
+                {userData.location && (
+                  <div className="flex items-center">
+                    <MapPin className="w-4 h-4 text-gray-600 mr-1" />
+                    <p className="text-gray-600">{userData.location}</p>
+                  </div>
+                )}
               </div>
               <div
                 className={`${karla.className} relative  text-2xl -rotate-90 font-extrabold mx-auto md:hidden inline-block w-max [filter:drop-shadow(0px_1px_3px_rgba(27,_37,_80,_0.14))] `}
