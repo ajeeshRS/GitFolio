@@ -51,13 +51,19 @@ export default function Home() {
   const [userDetails, setUserDetails] = useState<GitHubUser | null>(null);
   const [mergedPrCount, setMergedPrCount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const cardRef = useRef(null);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const downloadImage = async () => {
     if (cardRef.current === null) return;
-
+  
     try {
-      const image = await toPng(cardRef.current);
+      await document.fonts.ready;
+  
+      const image = await toPng(cardRef.current, {
+        cacheBust: true,
+        pixelRatio: window.devicePixelRatio || 1, 
+      });
+  
       download(image, "github-profile-card.png");
     } catch (err) {
       console.error("Failed to download the image", err);
@@ -160,7 +166,7 @@ export default function Home() {
         <div className="flex items-center py-8">
           <button
             onClick={downloadImage}
-            className="px-4 py-2 mx-3 rounded-md border border-black bg-white text-black text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200"
+            className="px-4 py-2 mx-3 md:cursor-default cursor-not-allowed rounded-md border border-black bg-white text-black text-sm hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200"
           >
             Download
           </button>

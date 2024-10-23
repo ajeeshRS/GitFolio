@@ -80,7 +80,6 @@ export default function ProfileCard({
                 src={userData.avatar_url}
                 alt="GitHub Avatar"
                 priority
-                placeholder="blur"
               />
               <div className="ml-4">
                 <h2 className="text-xl font-semibold">
